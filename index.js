@@ -7,7 +7,7 @@ const PORT = 3000;
 const server = express(); 
 
 server.use(express.json()); 
-server.use(express.urlencoded({ extended: true })); 
+server.use(express.urlencoded({ extended: false })); 
 
 const movieRoutes = require('./routes/movie.routes'); 
 const cinemaRoutes = require('./routes/cinema.routes'); 
