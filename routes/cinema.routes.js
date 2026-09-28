@@ -65,7 +65,7 @@ router.delete('/:id', async (req, res, next) => {
     if (!deletedCinema) {
       return res.status(404).json({ message: 'Cine no encontrado' });
     }
-    return res.status(200).json({ message: 'Cine eliminado correctamente', cinema: deletedCinema });
+    return res.status(200).json({ message: 'Cine eliminado ', cinema: deletedCinema });
   } catch (err) {
     return next(err);
   }
