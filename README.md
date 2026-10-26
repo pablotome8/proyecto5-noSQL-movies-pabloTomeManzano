@@ -1,85 +1,94 @@
-# 🎬 Proyecto 5 · API REST NoSQL de Películas y Cines
+<div align="center">
 
-API REST hecha con **Node.js**, **Express** y **MongoDB** (a través de **Mongoose**) para gestionar un catálogo de películas y los cines que las proyectan.
+# 🎬 NoSQL Movies & Cinemas REST API
 
-Tiene un **CRUD completo** de películas con varios filtros de búsqueda, y un CRUD de cines que se relacionan con las películas mediante referencias (`ObjectId` + `populate`).
+![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A518-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-5.x-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-NoSQL-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-ODM-880000?style=for-the-badge&logo=mongoose&logoColor=white)
 
----
+A RESTful API built with **Node.js**, **Express**, and **MongoDB** (via **Mongoose**) to manage a movie catalog and the cinema locations screening them.
 
-## 📑 Índice
+Provides a **complete CRUD** for movies with multi-criteria search filters, and a **Cinema CRUD** linked to movies through document references (`ObjectId` + `populate`).
 
-- [Tecnologías](#-tecnologías)
-- [Estructura del proyecto](#-estructura-del-proyecto)
-- [Modelos de datos](#-modelos-de-datos)
-- [Requisitos previos](#-requisitos-previos)
-- [Instalación y puesta en marcha](#-instalación-y-puesta-en-marcha)
-- [Endpoints](#-endpoints)
-  - [Películas `/movies`](#películas-movies)
-  - [Cines `/cinemas`](#cines-cinemas)
-- [Ejemplos de uso](#-ejemplos-de-uso)
-- [Gestión de errores](#-gestión-de-errores)
-- [Capturas de funcionamiento](#-capturas-de-funcionamiento)
-- [Autor](#-autor)
+</div>
 
 ---
 
-## 🛠 Tecnologías
+## 📑 Table of Contents
 
-| Tecnología | Versión | Uso |
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Data Models](#-data-models)
+- [Prerequisites](#-prerequisites)
+- [Installation & Setup](#-installation--setup)
+- [API Endpoints](#-api-endpoints)
+  - [Movies `/movies`](#movies-movies)
+  - [Cinemas `/cinemas`](#cinemas-cinemas)
+- [Usage Examples](#-usage-examples)
+- [Error Handling](#-error-handling)
+- [Screenshots](#-screenshots)
+- [Author](#-author)
+
+---
+
+## 🛠 Tech Stack
+
+| Technology | Version | Purpose |
 |---|---|---|
-| [Node.js](https://nodejs.org/) | ≥ 18 | Entorno de ejecución (se usa `node --watch`) |
-| [Express](https://expressjs.com/) | ^5.2.1 | Servidor HTTP y enrutado |
-| [Mongoose](https://mongoosejs.com/) | ^9.10.2 | ODM para MongoDB: esquemas, modelos y consultas |
-| [MongoDB](https://www.mongodb.com/) | Local | Base de datos NoSQL documental |
-| [Postman](https://www.postman.com/) | — | Pruebas de los endpoints |
+| [Node.js](https://nodejs.org/) | ≥ 18 | JavaScript runtime environment (`node --watch` supported) |
+| [Express](https://expressjs.com/) | ^5.2.1 | HTTP server and routing framework |
+| [Mongoose](https://mongoosejs.com/) | ^9.10.2 | MongoDB ODM for schemas, models, validation, and queries |
+| [MongoDB](https://www.mongodb.com/) | Local | Document-oriented NoSQL database |
+| [Postman](https://www.postman.com/) | — | API endpoint testing |
 
 ---
 
-## 📁 Estructura del proyecto
+## 📁 Project Structure
 
 ```text
 proyecto5-noSQL-movies-pabloTomeManzano/
-├── index.js                 # Punto de entrada: arranca Express y monta las rutas
+├── index.js                 # Entry point: initializes Express and mounts routes
 ├── package.json
 ├── utils/
-│   └── db.js                # Conexión a MongoDB con Mongoose
+│   └── db.js                # MongoDB connection setup via Mongoose
 ├── models/
-│   ├── Movie.js             # Esquema y modelo de Película
-│   └── cinema.js            # Esquema y modelo de Cine (con referencia a Movie)
+│   ├── Movie.js             # Movie schema and model
+│   └── cinema.js            # Cinema schema and model (references Movie)
 ├── routes/
-│   ├── movie.routes.js      # Endpoints de /movies
-│   └── cinema.routes.js     # Endpoints de /cinemas
+│   ├── movie.routes.js      # /movies endpoints
+│   └── cinema.routes.js     # /cinemas endpoints
 ├── seeds/
-│   └── movies.seed.js       # Script de carga inicial de películas
-└── capturas/                # Capturas de las pruebas con Postman
+│   └── movies.seed.js       # Initial database seeding script for movies
+└── capturas/                # Postman test screenshots
 ```
 
 ---
 
-## 🗂 Modelos de datos
+## 🗂 Data Models
 
 ### `Movie`
 
-| Campo | Tipo | Obligatorio | Descripción |
+| Field | Type | Required | Description |
 |---|---|:---:|---|
-| `title` | `String` | ✅ | Título de la película |
-| `director` | `String` | ✅ | Director/a |
-| `year` | `Number` | ❌ | Año de estreno |
-| `genre` | `String` | ✅ | Género |
-| `createdAt` / `updatedAt` | `Date` | auto | Generados por `timestamps: true` |
+| `title` | `String` | ✅ | Movie title |
+| `director` | `String` | ✅ | Movie director |
+| `year` | `Number` | ❌ | Release year |
+| `genre` | `String` | ✅ | Movie genre |
+| `createdAt` / `updatedAt` | `Date` | auto | Automatically generated via `timestamps: true` |
 
 ### `Cinema`
 
-| Campo | Tipo | Obligatorio | Descripción |
+| Field | Type | Required | Description |
 |---|---|:---:|---|
-| `name` | `String` | ✅ | Nombre del cine |
-| `location` | `String` | ✅ | Ubicación |
-| `movies` | `[ObjectId]` → `Movie` | ❌ | Películas en cartelera (referencias) |
-| `createdAt` / `updatedAt` | `Date` | auto | Generados por `timestamps: true` |
+| `name` | `String` | ✅ | Cinema name |
+| `location` | `String` | ✅ | City / Venue address |
+| `movies` | `[ObjectId]` → `Movie` | ❌ | Referenced movies currently showing |
+| `createdAt` / `updatedAt` | `Date` | auto | Automatically generated via `timestamps: true` |
 
 ```mermaid
 erDiagram
-    CINEMA ||--o{ MOVIE : "proyecta"
+    CINEMA ||--o{ MOVIE : "screens"
     CINEMA {
         ObjectId _id
         String name
@@ -97,54 +106,54 @@ erDiagram
 
 ---
 
-## ✅ Requisitos previos
+## ✅ Prerequisites
 
-- **Node.js** 18 o superior (hace falta para `node --watch`).
-- **MongoDB** instalado y en marcha en local, en el puerto por defecto `27017`.
+- **Node.js** 18 or higher (required for `node --watch`).
+- **MongoDB** installed and running locally on the default port `27017`.
 
-Para comprobar que MongoDB está activo (Linux con systemd):
+To verify that MongoDB is active (Linux with `systemd`):
 
 ```bash
 sudo systemctl status mongodb
-# Si no está arrancado:
+# If not running:
 sudo systemctl start mongodb
 ```
 
-> La aplicación se conecta a la base de datos `proyecto5-noSQL-movies` en `mongodb://127.0.0.1:27017`. Si necesitas otra URL, cámbiala en [`utils/db.js`](utils/db.js) y en [`seeds/movies.seed.js`](seeds/movies.seed.js).
+> The application connects to the `proyecto5-noSQL-movies` database at `mongodb://127.0.0.1:27017`. To use a custom connection URI, update [`utils/db.js`](utils/db.js) and [`seeds/movies.seed.js`](seeds/movies.seed.js).
 
 ---
 
-## 🚀 Instalación y puesta en marcha
+## 🚀 Installation & Setup
 
-1. **Clonar el repositorio**
+1. **Clone the repository**
 
    ```bash
    git clone https://github.com/pablotome8/proyecto5-noSQL-movies-pabloTomeManzano.git
    cd proyecto5-noSQL-movies-pabloTomeManzano
    ```
 
-2. **Instalar las dependencias**
+2. **Install dependencies**
 
    ```bash
    npm install
    ```
 
-3. **Cargar los datos iniciales (seed)**
+3. **Seed initial movie data**
 
    ```bash
    node seeds/movies.seed.js
    ```
 
-   El script vacía la colección `movies` si ya tenía datos e inserta 6 películas de ejemplo (*The Matrix*, *Buscando a Nemo*, *Interestelar*…).
+   This script resets the `movies` collection if populated and inserts 6 sample movies (*The Matrix*, *Buscando a Nemo*, *Interestelar*, etc.).
 
-4. **Arrancar el servidor**
+4. **Start the server**
 
    ```bash
-   npm start      # modo normal
-   npm run dev    # modo desarrollo (se reinicia solo al guardar cambios)
+   npm start      # Production mode
+   npm run dev    # Development mode (auto-restarts on file changes)
    ```
 
-   Si todo va bien, verás en la consola:
+   Once started, the console outputs:
 
    ```text
    Server running in http://localhost:3000
@@ -153,38 +162,38 @@ sudo systemctl start mongodb
 
 ---
 
-## 🔌 Endpoints
+## 🔌 API Endpoints
 
-URL base: `http://localhost:3000`
+Base URL: `http://localhost:3000`
 
-### Películas `/movies`
+### Movies `/movies`
 
-| Método | Ruta | Descripción | Respuesta OK |
-|---|---|---|:---:|
-| `GET` | `/movies` | Devuelve todas las películas | `200` |
-| `GET` | `/movies/id/:id` | Devuelve una película por su `_id` | `200` |
-| `GET` | `/movies/title/:title` | Busca por título (coincidencia parcial y **sin distinguir mayúsculas**) | `200` |
-| `GET` | `/movies/genre/:genre` | Filtra por género (coincidencia exacta) | `200` |
-| `GET` | `/movies/year/:year` | Devuelve las películas estrenadas **después** del año indicado (`$gt`) | `200` |
-| `POST` | `/movies` | Crea una película nueva | `201` |
-| `PUT` | `/movies/:id` | Modifica una película existente | `200` |
-| `DELETE` | `/movies/:id` | Elimina una película | `200` |
+| Method | Endpoint | Description | Success Status |
+|---|---|:---:|:---:|
+| `GET` | `/movies` | Retrieve all movies | `200` |
+| `GET` | `/movies/id/:id` | Retrieve a single movie by its `_id` | `200` |
+| `GET` | `/movies/title/:title` | Search movies by title (partial & **case-insensitive** match) | `200` |
+| `GET` | `/movies/genre/:genre` | Filter movies by genre (exact match) | `200` |
+| `GET` | `/movies/year/:year` | Retrieve movies released **after** the given year (`$gt`) | `200` |
+| `POST` | `/movies` | Create a new movie | `201` |
+| `PUT` | `/movies/:id` | Update an existing movie | `200` |
+| `DELETE` | `/movies/:id` | Delete a movie | `200` |
 
-### Cines `/cinemas`
+### Cinemas `/cinemas`
 
-| Método | Ruta | Descripción | Respuesta OK |
-|---|---|---|:---:|
-| `GET` | `/cinemas` | Devuelve todos los cines con sus películas completas (`populate`) | `200` |
-| `POST` | `/cinemas` | Crea un cine nuevo | `201` |
-| `PUT` | `/cinemas/:id/add-movie` | Añade una película a la cartelera de un cine (`$push`) | `200` |
-| `PUT` | `/cinemas/:id` | Modifica los datos de un cine | `200` |
-| `DELETE` | `/cinemas/:id` | Elimina un cine | `200` |
+| Method | Endpoint | Description | Success Status |
+|---|---|:---:|:---:|
+| `GET` | `/cinemas` | Retrieve all cinemas with populated `movies` documents (`populate`) | `200` |
+| `POST` | `/cinemas` | Create a new cinema | `201` |
+| `PUT` | `/cinemas/:id/add-movie` | Add a movie reference to a cinema's billboard (`$push`) | `200` |
+| `PUT` | `/cinemas/:id` | Update cinema details | `200` |
+| `DELETE` | `/cinemas/:id` | Delete a cinema | `200` |
 
 ---
 
-## 🧪 Ejemplos de uso
+## 🧪 Usage Examples
 
-### Crear una película
+### Create a Movie
 
 ```bash
 curl -X POST http://localhost:3000/movies \
@@ -197,7 +206,7 @@ curl -X POST http://localhost:3000/movies \
   }'
 ```
 
-Respuesta `201 Created`:
+Response `201 Created`:
 
 ```json
 {
@@ -212,20 +221,20 @@ Respuesta `201 Created`:
 }
 ```
 
-### Buscar por título
+### Search by Title
 
 ```bash
 curl "http://localhost:3000/movies/title/matrix"
-# Devuelve "The Matrix" y "The Matrix Reloaded"
+# Returns "The Matrix" and "The Matrix Reloaded"
 ```
 
-### Películas posteriores a 2005
+### Movies Released After 2005
 
 ```bash
 curl http://localhost:3000/movies/year/2005
 ```
 
-### Actualizar una película
+### Update a Movie
 
 ```bash
 curl -X PUT http://localhost:3000/movies/6abab4f4bb2592d01bd0ce42 \
@@ -238,56 +247,56 @@ curl -X PUT http://localhost:3000/movies/6abab4f4bb2592d01bd0ce42 \
   }'
 ```
 
-### Crear un cine y añadirle una película
+### Create a Cinema and Add a Movie to Its Billboard
 
 ```bash
-# 1. Crear el cine
+# 1. Create the cinema
 curl -X POST http://localhost:3000/cinemas \
   -H "Content-Type: application/json" \
   -d '{ "name": "Cines Callao", "location": "Madrid" }'
 
-# 2. Añadir una película a su cartelera
-curl -X PUT http://localhost:3000/cinemas/<ID_CINE>/add-movie \
+# 2. Add a movie to its billboard
+curl -X PUT http://localhost:3000/cinemas/<CINEMA_ID>/add-movie \
   -H "Content-Type: application/json" \
-  -d '{ "movieId": "<ID_PELICULA>" }'
+  -d '{ "movieId": "<MOVIE_ID>" }'
 ```
 
-La respuesta trae el cine con el array `movies` ya poblado, es decir, con los documentos completos de las películas y no solo sus IDs.
+The response returns the updated cinema document with the `movies` array fully populated with complete movie objects rather than raw IDs.
 
 ---
 
-## ⚠️ Gestión de errores
+## ⚠️ Error Handling
 
-- **`404 Not Found`**: el recurso no existe. Por ejemplo:
+- **`404 Not Found`**: Returned when a requested document does not exist:
   ```json
   { "message": "Película no encontrada" }
   ```
-- **Errores de validación o de ID mal formado**: cualquier excepción de Mongoose (campos obligatorios que faltan, `ObjectId` inválido…) se pasa al manejador de errores de Express con `next(err)`.
+- **Validation & Malformed ID Errors**: Any Mongoose exception (missing required fields, invalid `ObjectId`, etc.) is forwarded to the Express error middleware via `next(err)`.
 
 ---
 
-## 📸 Capturas de funcionamiento
+## 📸 Screenshots
 
-Las pruebas se hicieron con **Postman** contra una instancia local de MongoDB.
+All endpoints were verified using **Postman** against a local MongoDB instance.
 
-| Prueba | Captura |
+| Test Case | Screenshot |
 |---|---|
-| Servicio MongoDB activo | ![MongoDB activo](capturas/Screenshot_20260928_205603.png) |
-| Arranque del servidor (`npm run dev`) | ![Arranque](capturas/Screenshot_20260928_203300.png) |
-| `GET /movies` | ![GET todas](capturas/Screenshot_20260928_205158.png) |
-| `POST /movies` | ![POST](capturas/Screenshot_20260928_205217.png) |
-| `GET /movies/id/:id` | ![GET por ID](capturas/Screenshot_20260928_205234.png) |
-| `GET /movies/title/:title` | ![GET por título](capturas/Screenshot_20260928_205517.png) |
-| `GET /movies/genre/:genre` | ![GET por género](capturas/Screenshot_20260928_205307.png) |
-| `GET /movies/year/:year` | ![GET por año](capturas/Screenshot_20260928_205320.png) |
-| `PUT /movies/:id` | ![PUT](capturas/Screenshot_20260928_205331.png) |
-| `DELETE /movies/:id` | ![DELETE](capturas/Screenshot_20260928_205411.png) |
+| Active MongoDB Service | ![Active MongoDB](capturas/Screenshot_20260928_205603.png) |
+| Server Startup (`npm run dev`) | ![Server Startup](capturas/Screenshot_20260928_203300.png) |
+| `GET /movies` | ![GET All Movies](capturas/Screenshot_20260928_205158.png) |
+| `POST /movies` | ![POST Movie](capturas/Screenshot_20260928_205217.png) |
+| `GET /movies/id/:id` | ![GET Movie by ID](capturas/Screenshot_20260928_205234.png) |
+| `GET /movies/title/:title` | ![GET Movie by Title](capturas/Screenshot_20260928_205517.png) |
+| `GET /movies/genre/:genre` | ![GET Movie by Genre](capturas/Screenshot_20260928_205307.png) |
+| `GET /movies/year/:year` | ![GET Movie by Year](capturas/Screenshot_20260928_205320.png) |
+| `PUT /movies/:id` | ![PUT Movie](capturas/Screenshot_20260928_205331.png) |
+| `DELETE /movies/:id` | ![DELETE Movie](capturas/Screenshot_20260928_205411.png) |
 
 ---
 
-## 👤 Autor
+## 👤 Author
 
-**Pablo Tomé Manzano**
-Proyecto 5 · Máster, módulo de bases de datos NoSQL.
+**Pablo Tomé Manzano**  
+Project 5 · Master's Module on NoSQL Databases.
 
 - GitHub: [@pablotome8](https://github.com/pablotome8)
