@@ -185,7 +185,7 @@ Base URL: `http://localhost:3000`
 |---|---|:---:|:---:|
 | `GET` | `/cinemas` | Retrieve all cinemas with populated `movies` documents (`populate`) | `200` |
 | `POST` | `/cinemas` | Create a new cinema | `201` |
-| `PUT` | `/cinemas/:id/add-movie` | Add a movie reference to a cinema's billboard (`$push`) | `200` |
+| `PUT` | `/cinemas/:id/add-movie` | Add a movie reference to a cinema's billboard (`$addToSet`) | `200` |
 | `PUT` | `/cinemas/:id` | Update cinema details | `200` |
 | `DELETE` | `/cinemas/:id` | Delete a cinema | `200` |
 

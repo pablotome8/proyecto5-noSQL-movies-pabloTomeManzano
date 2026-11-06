@@ -74,10 +74,7 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
-    const movieToUpdate = new Movie(req.body);
-    movieToUpdate._id = id; // Mantener el mismo ID
-
-    const updatedMovie = await Movie.findByIdAndUpdate(id, movieToUpdate, { new: true });
+    const updatedMovie = await Movie.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
     if (!updatedMovie) {
       return res.status(404).json({ message: 'Película no encontrada para actualizar' });
     }

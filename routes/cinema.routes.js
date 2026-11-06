@@ -30,7 +30,7 @@ router.put('/:id/add-movie', async (req, res, next) => {
   try {
     const updatedCinema = await Cinema.findByIdAndUpdate(
       id,
-      { $push: { movies: movieId } },
+      { $addToSet: { movies: movieId } },
       { new: true }
     ).populate('movies');
 
